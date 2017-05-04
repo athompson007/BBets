@@ -1,7 +1,7 @@
 ---
 title: "Brownlows Bets"
-author: "Put your name here!"
-date: "put the date here"
+author: "Ashley Thompson"
+date: "5/2/2017"
 output: html_document: default
  ---
 
@@ -11,24 +11,66 @@ output: html_document: default
 
 <!--In this section you explain what you are trying to show.  Where did the data come from?  What is the research or other question you are trying to answer?!-->
 
- At the first day of class there are 35 students in Math Statistics class and professor Brownlow always proposes this bet to his students "I will wager $2 to your bet of $1 that at least two people in today's class have  the same birthday.  He tells me he has made that bet 1137 times so far. Where do you think his profits are? Discuss this in a markdown document
+ At the first day of class there are 35 students in Math Statistics class and professor Brownlow always proposes this bet to his students "I will wager $2 to your bet of $1 that at least two people in today's class have  the same birthday.  He tells me he has made that bet 1137 times so far. Where do you think his profits are? Discuss this in a markdown document.
+ 
+ In this project We will calculate Professor Brownlow's estimated profits and losses based on the information. Out of 35 students he states 2 will have the same birthday. He wages $2:$1 and he made this bet 1137 times.
 
 # Methods
 
 <!--Decide on your methods:  In this section explain the approach you will take to attack the issue --- how will you decide on a likely estimate of professor Brownlow's earnings or losses after 1137 bets. Also explain how you construct a 95% confidence interval about your estimate of his winnings !-->
+
+We will run a test to determine Professor Brownlow's profits and losses. From the test results we will gather the data needed to determine the 95% confidence interval.
+
+```{r}
+pbdays=c(1:365)
+brownlow=0
+for(i in 1:1137){
+class=sample(pbdays,size=35,replace=TRUE)
+robj=duplicated(class)
+if (sum(robj)>0) brownlow=brownlow+1 else brownlow=brownlow-2
+}
+```
 
 
 #Profit Estimate
 
 <!--Explain and display the results of your method of coming up with the estimate of professor Brownlows betting!-->
 
+I ran a code putting Brownlow through 1137 times to get summary of his profit and loss amount.
+
+```{r}
+sum(brownlow)
+```
+
+My Brownlow made `r sum(brownlow)`
+
 
 # Confidence interval of Brownlows earning
 
 <!--Explain and display your method of coming up with a 95% confidence interval of  professor Brownlows-->
+
+```{r}
+bucket=numeric()
+for(j in 1:1000){
+pbdays=c(1:365)
+brownlow=0
+for(i in 1:1137){
+class=sample(pbdays,size=35,replace=TRUE)
+robj=duplicated(class)
+if (sum(robj)>0) brownlow=brownlow+1 else brownlow=brownlow-2
+}
+bucket[j]=brownlow
+}
+```
+
+```{r}
+hist(bucket)
+quantile(x=bucket, probs=c(.025, .975))
+```
 
 
 # Discussion and Conclusion
 
 <!--Discussion and conclusion here.  If professor Brownlow is consistantly making or losing money how could he change his payout so that his profits center on zero?  Also discuss what size his class should be in order to have his current scheme balance at zero profit.!-->
 
+He could change his payout to be $1:$1 to make it a more equal wager. In order for his current scheme to profit at 0 his class size would need consist of 1 person. If the size was 1 there would be no chance of 2 people having the same birthday.
